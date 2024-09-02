@@ -15,10 +15,14 @@ class MapWidget extends StatelessWidget {
         initialZoom: 13.0,
       ),
       children: [
+        // TileLayer(
+        //   urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        //   subdomains: ['a', 'b', 'c'],
+        // ),
         TileLayer(
-          urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-          subdomains: ['a', 'b', 'c'],
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
         ),
+
         MarkerLayer(
           markers: markers, // List of Marker objects
         ),

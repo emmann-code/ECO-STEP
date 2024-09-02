@@ -1,4 +1,6 @@
+import 'package:eco_step/Sub/Components/my_button.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RouteInfoCard extends StatelessWidget {
   final String location;
@@ -30,40 +32,47 @@ class RouteInfoCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ListTile(
-            leading: Icon(Icons.location_pin, color: Theme.of(context).colorScheme.primary),
-            title: Text(location),
-            subtitle: Text('$distance | $time'),
+            leading: CircleAvatar(backgroundColor: Theme.of(context).colorScheme.background,
+                child: Icon(Icons.location_pin, color: Theme.of(context).colorScheme.primary)),
+            title: Text(location,style: GoogleFonts.mansalva(fontWeight: FontWeight.w400,fontSize: 20),),
+            subtitle: Text('$distance || $time',
+                style: GoogleFonts.mansalva(fontWeight: FontWeight.w400,fontSize: 15,color: Colors.grey)),
           ),
           Image.network(imageUrl, fit: BoxFit.cover),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Working time and contacts',
-                    style: Theme.of(context).textTheme.bodyLarge),
-                SizedBox(height: 4.0),
-                Text(
-                  workingHours,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                Text(
-                  contactNumber,
-                  style: Theme.of(context).textTheme.bodyMedium,
+                Center(
+                  child:
+                  Column(
+                    children: [
+                      SizedBox(height: 10,),
+                      Text('Working time and contacts',
+                          style: Theme.of(context).textTheme.bodyLarge),
+                      SizedBox(height: 4.0),
+                      Text(
+                        workingHours,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      Text(
+                        contactNumber,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: ElevatedButton(
-              onPressed: () {},
-              child: Text('Start'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-              ),
-            ),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+            child: MyButton(text: "START",
+              onTap: (){},),
           ),
+          SizedBox(height: 10,)
         ],
       ),
     );

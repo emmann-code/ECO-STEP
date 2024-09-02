@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../Components/Searchtextfield.dart';
-import '../Components/filterbutton.dart';
+import '../Components/my_Searchtextfield.dart';
+import '../Components/my_filterbutton.dart';
 
 class SearchAndFilterWidget extends StatelessWidget {
   final List<String> filters;

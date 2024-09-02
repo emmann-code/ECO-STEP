@@ -34,9 +34,7 @@ Future<UserCredential> signInWithEmailPassowrd(String email,password) async{
       throw Exception(e.code);
     }
   }
-
   // sign out
-Future<void> signOut() async {
-  return await _firebaseAuth.signOut();
-}
+  Future<void> signOut() async {
+  return await _firebaseAuth.signOut();}
 }

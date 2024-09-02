@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pizza_app/pages/login_page.dart';
-import 'package:pizza_app/pages/register_page.dart';
+import '../../SignIn&Up/login_page.dart';
+import '../../SignIn&Up/register_page.dart';
 
 class LoginOrRegister extends StatefulWidget {
   const LoginOrRegister({super.key});

@@ -1,0 +1,15 @@
+flutter_native_splash:
+  color: "#FFFFFF"
+  color_dark: "#1D212A"
+  image: assets/recylce.png
+  image_dark: assets/recylce.png
+  ios: true
+  android: true
+
+  android_12:
+    color: "#FFFFFF"
+    color_dark: "#1D212A"
+    image: assets/recylce.png
+    image_dark: assets/recylce.png
+
+  web: false
