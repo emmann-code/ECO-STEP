@@ -1,13 +1,10 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:intl/intl.dart';
 
 class AppLocalizations {
   final Locale locale;
+  late Map<String, String> _localizedStrings;
 
   AppLocalizations(this.locale);
 
@@ -18,15 +15,24 @@ class AppLocalizations {
   static const LocalizationsDelegate<AppLocalizations> delegate =
   _AppLocalizationsDelegate();
 
-  static Map<String, String> _localizedStrings = {};
-
   Future<bool> load() async {
-    String jsonString = await rootBundle.loadString('ln10/${locale.languageCode}.json');
-    Map<String, dynamic> jsonMap = json.decode(jsonString);
+    String jsonString;
+    try {
+      jsonString = await rootBundle.loadString('lib/l10n/${locale.languageCode}.json');
+    } catch (e) {
+      debugPrint("Error loading localization file for ${locale.languageCode}: $e");
+      return false;
+    }
 
-    _localizedStrings = jsonMap.map((key, value) {
-      return MapEntry(key, value.toString());
-    });
+    try {
+      Map<String, dynamic> jsonMap = json.decode(jsonString);
+      _localizedStrings = jsonMap.map((key, value) {
+        return MapEntry(key, value.toString());
+      });
+    } catch (e) {
+      debugPrint("Error decoding JSON for ${locale.languageCode}: $e");
+      return false;
+    }
 
     return true;
   }
