@@ -23,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
     final _authService = AuthService();
     // try sign in
     try {
-      await _authService.signInWithEmailPassowrd(emailController.text, passwordController.text);
+      await _authService.signInWithEmailPassword(emailController.text, passwordController.text);
       // navigator to home page
       Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
     } catch (e) {

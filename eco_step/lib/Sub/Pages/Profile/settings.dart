@@ -19,29 +19,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   String? _profileImageUrl;  // This will store the profile image URL
 
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUserProfile();
-  }
-
-  Future<void> _loadUserProfile() async {
-    try {
-      // Fetch the user's profile data from Firestore
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(widget.email)
-          .get();
-
-      setState(() {
-        _profileImageUrl = userDoc['profileImage'];
-      });
-    } catch (e) {
-      print('Failed to load user profile: $e');
-    }
-  }
-
   void logout(){
     final authService = AuthService();
     authService.signOut();

@@ -23,27 +23,6 @@ class _UpdatepasswordState extends State<Updatepassword> {
 
   String? _profileImageUrl;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadUserProfile();
-  }
-
-  Future<void> _loadUserProfile() async {
-    try {
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(widget.email)
-          .get();
-
-      setState(() {
-        _profileImageUrl = userDoc['profileImage'];
-      });
-    } catch (e) {
-      print('Failed to load user profile: $e');
-    }
-  }
-
   Future<void> _updatePassword() async {
     try {
       String oldPassword = oldpassController.text;
