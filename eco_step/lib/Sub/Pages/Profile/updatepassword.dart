@@ -85,6 +85,7 @@ class _UpdatepasswordState extends State<Updatepassword> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Text(
           "Update Password",
           style: GoogleFonts.roboto(

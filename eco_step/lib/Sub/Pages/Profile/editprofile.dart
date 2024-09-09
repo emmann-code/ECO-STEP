@@ -82,6 +82,7 @@ class _EditprofileState extends State<Editprofile> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Text(
           "Edit Personal Information",
           style: GoogleFonts.roboto(

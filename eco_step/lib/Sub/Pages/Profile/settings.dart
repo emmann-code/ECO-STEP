@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eco_step/Sub/Components/my_settingTile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../Components/my_profilepic.dart';
 import '../../Services/auth/auth_service.dart';
 import '../../Services/auth/login_or_register.dart';
+import '../../Themes/theme_provider.dart';
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
@@ -30,6 +33,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Text('Settings',style: GoogleFonts.roboto(
           fontSize: 20,
           fontWeight: FontWeight.bold,),),
@@ -40,7 +44,7 @@ class _SettingsPageState extends State<SettingsPage> {
           children: [
             SizedBox(height: 25,),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Profilepic(
@@ -49,22 +53,44 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                   imageUrl: _profileImageUrl,  // Pass the image URL here
                 ),
-                SizedBox(width: 150),
-                ElevatedButton(
-                  onPressed:logout,
-                  child: Row(
-                    children: [
-                      Text(
-                        'Logout',
-                        style: TextStyle(color: Theme.of(context).colorScheme.secondary,),
+                SizedBox(width: 130),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed:logout,
+                      child: Row(
+                        children: [
+                          Text(
+                            'Logout',
+                            style: TextStyle(color: Theme.of(context).colorScheme.secondary,),
+                          ),
+                          SizedBox(width: 4,),
+                          Icon(Icons.logout,color: Theme.of(context).colorScheme.secondary,)
+                        ],
                       ),
-                      SizedBox(width: 4,),
-                      Icon(Icons.logout,color: Theme.of(context).colorScheme.secondary,)
-                    ],
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                  ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // text
+                        Text('Dark Mode',style:
+                        TextStyle(fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.inversePrimary),),
+                        // switch
+                        CupertinoSwitch(
+                            value: Provider.of<ThemeProvider>(context, listen: false).isDarkMode,
+                            onChanged:(value){
+                              Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+                            }
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),

@@ -30,6 +30,13 @@ dependencies:
   firebase_storage: ^12.2.0
   flutter_localization: ^0.2.1
   intl: ^0.19.0
+  flutter_spinkit: ^5.2.0
+  carousel_slider: ^5.0.0
+  smooth_page_indicator: ^1.2.0+3
+#  maplibre_gl: ^0.20.0
+  url_launcher: ^6.3.0
+  flutter_polyline_points: ^2.1.0
+
 
 dev_dependencies:
   flutter_test:
@@ -38,23 +45,23 @@ dev_dependencies:
   intl_utils: ^2.8.7
 
 # Flutter Intl configuration should be at the top level, not inside any dependencies block
-flutter_intl:
-  enabled: true
-  arb_dir: lib/l10n
-  template_arbs:
-    - lib/generated/l10n/intl_en.arb
-    - lib/generated/l10n/intl_af.arb
-    - lib/generated/l10n/intl_ar.arb
-    - lib/generated/l10n/intl_zh.arb
-    - lib/generated/l10n/intl_nl.arb
-    - lib/generated/l10n/intl_fr.arb
-    - lib/generated/l10n/intl_de.arb
-    - lib/generated/l10n/intl_el.arb
-    - lib/generated/l10n/intl_he.arb
-    - lib/generated/l10n/intl_pl.arb
-  output_localization_file: lib/l10n/intl_messages.dart
-  output_localization_file_header: lib/l10n/intl_messages_header.dart
-  output_localization_file_header_path: lib/l10n/intl_messages_header.dart
+#flutter_intl:
+#  enabled: true
+#  arb_dir: lib/l10n
+#  template_arbs:
+#    - lib/generated/l10n/intl_en.arb
+#    - lib/generated/l10n/intl_af.arb
+#    - lib/generated/l10n/intl_ar.arb
+#    - lib/generated/l10n/intl_zh.arb
+#    - lib/generated/l10n/intl_nl.arb
+#    - lib/generated/l10n/intl_fr.arb
+#    - lib/generated/l10n/intl_de.arb
+#    - lib/generated/l10n/intl_el.arb
+#    - lib/generated/l10n/intl_he.arb
+#    - lib/generated/l10n/intl_pl.arb
+#  output_localization_file: lib/l10n/intl_messages.dart
+#  output_localization_file_header: lib/l10n/intl_messages_header.dart
+#  output_localization_file_header_path: lib/l10n/intl_messages_header.dart
 
 flutter:
   uses-material-design: true

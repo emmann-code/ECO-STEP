@@ -35,7 +35,7 @@ class RouteInfoCard extends StatelessWidget {
             leading: CircleAvatar(backgroundColor: Theme.of(context).colorScheme.background,
                 child: Icon(Icons.location_pin, color: Theme.of(context).colorScheme.primary)),
             title: Text(location,style: GoogleFonts.mansalva(fontWeight: FontWeight.w400,fontSize: 20),),
-            subtitle: Text('$distance || $time',
+            subtitle: Text('$distance  ||  $time',
                 style: GoogleFonts.mansalva(fontWeight: FontWeight.w400,fontSize: 15,color: Colors.grey)),
           ),
           Image.network(imageUrl, fit: BoxFit.cover),
@@ -70,7 +70,9 @@ class RouteInfoCard extends StatelessWidget {
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
             child: MyButton(text: "START",
-              onTap: (){},),
+              onTap: (){
+                Navigator.pop(context);
+              },),
           ),
           SizedBox(height: 10,)
         ],

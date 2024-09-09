@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eco_step/Sub/Pages/Shop/shop_product.dart';
+import 'package:eco_step/Sub/Pages/BenefitShop/shop_product.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

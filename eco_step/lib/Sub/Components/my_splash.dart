@@ -1,7 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class SplashScreenUI extends StatelessWidget {
+import '../Splah&Onboarding/onboarding_screens.dart';
+
+class SplashScreenUI extends StatefulWidget {
+
+  @override
+  State<SplashScreenUI> createState() => _SplashScreenUIState();
+}
+
+class _SplashScreenUIState extends State<SplashScreenUI> {
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _navigateToHome();
+  // }
+  // //
+  // _navigateToHome() async {
+  //   await Future.delayed(Duration(seconds: 7), () {});
+  //   Navigator.pushReplacement(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => OnboardingScreen()), // Navigate to your home page
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

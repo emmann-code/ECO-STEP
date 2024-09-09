@@ -14,7 +14,7 @@ class ProfileContainer extends StatelessWidget {
       ),
       child: Column(
         children: [
-          ListTile(tileColor: Colors.white,
+          ListTile(tileColor: Theme.of(context).colorScheme.secondary,
             title: Text('Edit personal information',style: GoogleFonts.roboto(
               fontSize: 13,
               fontWeight: FontWeight.bold,),
@@ -27,17 +27,6 @@ class ProfileContainer extends StatelessWidget {
           ),
           SizedBox(height: 10,),
           ListTile(
-            title: Text('Benefit Shop',style: GoogleFonts.roboto(
-              fontSize: 13,
-              fontWeight: FontWeight.bold,),),
-            onTap: () {
-              // Navigate to Benefit Shop Page
-            },
-            trailing: Icon(Icons.card_giftcard, color: Colors.black),
-            tileColor: Colors.white,
-          ),
-          SizedBox(height: 10,),
-          ListTile(
             title: Text('My events',style: GoogleFonts.roboto(
               fontSize: 13,
               fontWeight: FontWeight.bold,),),
@@ -45,7 +34,7 @@ class ProfileContainer extends StatelessWidget {
               // Navigate to My Events Page
             },
             trailing: Icon(Icons.event, color: Colors.black),
-            tileColor: Colors.white,
+            tileColor: Theme.of(context).colorScheme.secondary,
           ),
           SizedBox(height: 13,),
           ListTile(
@@ -57,7 +46,7 @@ class ProfileContainer extends StatelessWidget {
               Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));
             },
             trailing: Icon(Icons.settings, color: Colors.black),
-            tileColor: Colors.white,
+            tileColor: Theme.of(context).colorScheme.secondary,
           ),
           SizedBox(height: 10,),
           ListTile(
@@ -69,7 +58,7 @@ class ProfileContainer extends StatelessWidget {
               Navigator.push(context, MaterialPageRoute(builder: (context) => AboutApp()));
             },
             trailing:  Icon(Icons.info_outline, color: Colors.black),
-            tileColor: Colors.white,
+            tileColor:Theme.of(context).colorScheme.secondary,
           ),
         ],
       ),

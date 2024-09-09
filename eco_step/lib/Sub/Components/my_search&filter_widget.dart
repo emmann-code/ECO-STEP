@@ -18,8 +18,8 @@ class SearchAndFilterWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomMapSearchTextfield(title: 'Search'),
-        SizedBox(height: 10.0),
+        // CustomMapSearchTextfield(title: 'Search'),
+        // SizedBox(height: 10.0),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: FilterButtons(

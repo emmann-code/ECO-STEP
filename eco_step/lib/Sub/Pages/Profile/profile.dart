@@ -22,6 +22,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     _loadUserProfile();
+    _getEcoPoints(); // Fetch eco points from Firebase
   }
 
   Future<void> _loadUserProfile() async {
@@ -45,6 +46,23 @@ class _ProfilePageState extends State<ProfilePage> {
       print('Failed to load user profile: $e');
     }
   }
+
+  int ecoPoints = 0; // Eco points initialized to 0
+
+  // Function to fetch eco points from Firestore
+  void _getEcoPoints() async {
+    try {
+      String userId = 'user-id'; // Replace with the actual user ID from your auth
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+      // Cast the snapshot data to Map<String, dynamic>
+      setState(() {
+        ecoPoints = (snapshot.data() as Map<String, dynamic>)['ecoPoints'] ?? 0; // Get the ecoPoints or default to 0
+      });
+    } catch (e) {
+      print("Error fetching eco points: $e");
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +133,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   Icon(Icons.eco, color: Colors.green, size: 16),
                                   SizedBox(width: 5),
                                   Text(
-                                    '890 Eco-Points',
+                                    '$ecoPoints Eco-Points',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,

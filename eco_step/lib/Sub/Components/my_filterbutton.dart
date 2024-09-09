@@ -15,7 +15,6 @@ class FilterButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.background
       ),
       height: 40.0,
       child: ListView.builder(
@@ -30,7 +29,7 @@ class FilterButtons extends StatelessWidget {
               onSelected: (isSelected) {
                 onSelected(index);
               },
-              selectedColor: Theme.of(context).colorScheme.primary,
+              selectedColor: Theme.of(context).colorScheme.inversePrimary,
               backgroundColor: Theme.of(context).colorScheme.tertiary,
               labelStyle: TextStyle(
                 color: selectedIndex == index

@@ -16,7 +16,7 @@ class SetingTile extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(height: 20,),
-          ListTile(tileColor: Colors.white,
+          ListTile(tileColor: Theme.of(context).colorScheme.secondary,
             title: Text('Update Password',style: GoogleFonts.roboto(
               fontSize: 13,
               fontWeight: FontWeight.bold,),
@@ -37,7 +37,7 @@ class SetingTile extends StatelessWidget {
               Navigator.push(context, MaterialPageRoute(builder: (context) => ChangeLanguagePage()));
             },
             trailing: Icon(Icons.arrow_forward_ios_rounded, color: Colors.black),
-            tileColor: Colors.white,
+            tileColor: Theme.of(context).colorScheme.secondary,
           ),
           SizedBox(height: 20,),
           ListTile(
@@ -49,7 +49,7 @@ class SetingTile extends StatelessWidget {
               Navigator.push(context, MaterialPageRoute(builder: (context) => Privacypolicy()));
             },
             trailing: Icon(Icons.arrow_forward_ios_rounded, color: Colors.black),
-            tileColor: Colors.white,
+            tileColor:Theme.of(context).colorScheme.secondary,
           ),
           SizedBox(height: 20,),
           ListTile(
@@ -61,7 +61,7 @@ class SetingTile extends StatelessWidget {
               Navigator.push(context, MaterialPageRoute(builder: (context) => Termsconditions()));
             },
             trailing: Icon(Icons.arrow_forward_ios_rounded, color: Colors.black),
-            tileColor: Colors.white,
+            tileColor: Theme.of(context).colorScheme.secondary,
           ),
           SizedBox(height: 10,),
         ],

@@ -16,20 +16,12 @@ class _RecyclingAgentsListScreenState extends State<RecyclingAgentsListScreen> {
   @override
   Widget build(BuildContext context) {
 
-    int _selectedIndex = 0;
-
-    void _onItemTapped(int index) {
-      setState(() {
-        _selectedIndex = index;
-      });
-    }
-
     // Example data - in real implementation, you'd fetch data from an API
     List<Map<String, String>> agents = [
       {
-        'location': 'Battery recycling',
-        'distance': '2.81 km',
-        'time': '34 min',
+        'location': 'Recycling HDQ',
+        'distance': '7.81 km',
+        'time': '4 hours',
         'address': 'Libava-Romensksaja St. 11A',
         'workingHours': 'MONDAY - FRIDAY: 15.00 - 20.00\nSATURDAY - SUNDAY: 09.00 - 12.00',
         'contactNumber': '+375(29)777-98-89',
@@ -45,7 +37,7 @@ class _RecyclingAgentsListScreenState extends State<RecyclingAgentsListScreen> {
         backgroundColor: Theme.of(context).colorScheme.background.withOpacity(0.9),
         title: Text('${widget.selectedCategory} Recycling Companies',
           style: GoogleFonts.roboto(
-          fontSize: 20,
+          fontSize: 18,
           fontWeight: FontWeight.bold,
         ),),
       ),
@@ -64,21 +56,6 @@ class _RecyclingAgentsListScreenState extends State<RecyclingAgentsListScreen> {
           );
         },
       ),
-      // bottomNavigationBar: CustomBottomNavBar(
-      //   selectedIndex:_selectedIndex,
-      //   onItemTapped: _onItemTapped,
-      //   onScanTapped: () {
-      //     // Implement scan functionality here
-      //   },
-      // ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     // Handle scan action
-      //   },
-      //   child: Icon(Icons.qr_code_scanner),
-      //   backgroundColor: Colors.teal,
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

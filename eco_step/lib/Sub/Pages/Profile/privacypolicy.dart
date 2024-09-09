@@ -11,6 +11,7 @@ class Privacypolicy extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Text("Privacy Policy",style: GoogleFonts.roboto(
           fontSize: 20,
           fontWeight: FontWeight.bold,),),

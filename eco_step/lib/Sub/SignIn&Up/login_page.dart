@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart'; // Import Spinkit
 import '../Components/google_component.dart';
 import '../Components/my_button.dart';
 import '../Components/my_textfield.dart';
@@ -12,20 +13,23 @@ class LoginPage extends StatefulWidget {
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
-
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool _isLoading = false; // Track loading state
 
   // login method
   Future<void> _login() async {
-    // get instance of auth service
     final _authService = AuthService();
-    // try sign in
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
       await _authService.signInWithEmailPassword(emailController.text, passwordController.text);
-      // navigator to home page
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+      if (context.mounted) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+      }
     } catch (e) {
       showDialog(
         context: context,
@@ -34,6 +38,10 @@ class _LoginPageState extends State<LoginPage> {
           title: Text(e.toString()),
         ),
       );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -48,11 +56,9 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 100), // Add some space from the top
-                // logo
-               Image.asset("assets/recylce.png",scale: 2,),
+                const SizedBox(height: 100),
+                Image.asset("assets/recylce.png", scale: 2),
                 const SizedBox(height: 25),
-                // message logo slogan
                 Text(
                   "Welcome Back",
                   style: TextStyle(
@@ -61,7 +67,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 6),
-                // message logo slogan
                 Text(
                   "Sign in to work with the application",
                   style: TextStyle(
@@ -70,29 +75,24 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 25),
-                // email textfield
                 MyTextfield(
                   controller: emailController,
                   hintText: "Email",
                   obscureText: false,
                 ),
                 const SizedBox(height: 25),
-                // password textfield
                 MyTextfield(
                   controller: passwordController,
                   hintText: "Password",
                   obscureText: true,
                 ),
                 const SizedBox(height: 25),
-                // sign in button
                 MyButton(
                   text: 'Sign In',
-                  onTap: () {
-                    _login();
-                  },
+                  onTap: _login,
+                  isLoading: _isLoading, // Pass loading state
                 ),
                 const SizedBox(height: 25),
-                // sign with other options
                 Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -124,7 +124,6 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 15),
                 GoogleComponent(),
                 const SizedBox(height: 25),
-                // not a member register
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -147,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 25), // Adjust bottom padding as needed
+                const SizedBox(height: 25),
               ],
             ),
           ),

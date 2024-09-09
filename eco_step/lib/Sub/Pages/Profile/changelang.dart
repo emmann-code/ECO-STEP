@@ -21,7 +21,9 @@ class ChangeLanguagePage extends StatelessWidget {
     ];
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Text(AppLocalizations.of(context)!.changeLanguage),
       ),
       body: ListView.builder(

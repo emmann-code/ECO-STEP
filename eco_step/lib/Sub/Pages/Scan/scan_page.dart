@@ -1,4 +1,6 @@
+import 'package:eco_step/Sub/Pages/Scan/scan_list.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 // import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import '../../Components/my_button.dart';
@@ -26,9 +28,13 @@ class _ScanScreenState extends State<ScanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text('Scan', style: TextStyle(color: Colors.black)),
+        backgroundColor: Theme.of(context).colorScheme.background,
+        title: Text('Scan',style: GoogleFonts.roboto(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),),
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -49,7 +55,7 @@ class _ScanScreenState extends State<ScanScreen> {
                     Expanded(
                       child: TextField(
                         decoration: InputDecoration(
-                          fillColor: Colors.white,
+                          fillColor: Theme.of(context).colorScheme.secondary,
                           filled: true,
                           border: OutlineInputBorder(),
                           labelText: 'Enter barcode manually',
@@ -63,10 +69,10 @@ class _ScanScreenState extends State<ScanScreen> {
                       },
                       child: Text(
                         'Done',
-                        style: TextStyle(color: Theme.of(context).colorScheme.secondary,),
+                        style: TextStyle(color: Theme.of(context).colorScheme.background,),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
                       ),
                     ),
                   ],
@@ -75,6 +81,7 @@ class _ScanScreenState extends State<ScanScreen> {
                 MyButton(
                     text: "Select from the list",
                     onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>PackagingTypesScreen()));
                       // Handle selection from the list
                     }
                 ),

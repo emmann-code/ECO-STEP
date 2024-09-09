@@ -10,6 +10,7 @@ class AboutApp extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Text("About the App",style: GoogleFonts.roboto(
           fontSize: 20,
           fontWeight: FontWeight.bold,),),

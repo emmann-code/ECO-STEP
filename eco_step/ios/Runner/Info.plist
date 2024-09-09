@@ -48,8 +48,10 @@
 		<key>UIStatusBarHidden</key>
 		<false/>
 		<key>NSPhotoLibraryUsageDescription</key>
-        <string>We need access to your photo library to select a profile picture.</string>
-        <key>NSCameraUsageDescription</key>
-        <string>We need access to your camera to take a profile picture.</string>
+		<string>We need access to your photo library to select a profile picture.</string>
+		<key>NSCameraUsageDescription</key>
+		<string>We need access to your camera to take a profile picture.</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+        <string>Your location is used to show nearby recycling centers.</string>
 	</dict>
 </plist>
