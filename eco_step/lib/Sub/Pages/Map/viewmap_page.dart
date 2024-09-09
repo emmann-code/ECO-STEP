@@ -33,12 +33,8 @@ class _RecyclingAgentsListScreenState extends State<RecyclingAgentsListScreen> {
         'address': 'Libava-Romensksaja St. 11A',
         'workingHours': 'MONDAY - FRIDAY: 15.00 - 20.00\nSATURDAY - SUNDAY: 09.00 - 12.00',
         'contactNumber': '+375(29)777-98-89',
-        'imageUrl': 'https://www.google.com/imgres?q=images%20for%20recycling%20agents&imgur'
-            'l=https%3A%2F%2Fd2wrwj382xgrci.cloudfront.net%2FPictures%2F480xany%2F0%2F4%2F8%2F10048_pre23.'
-            '09_106493.jpg&imgrefurl=https%3A%2F%2Fpackagingeurope.com%2Fnews%2Fplastics-recyclers-europe-high'
-            '-energy-prices-could-drive-recycling-companies-out-of-business%2F8759.article&docid=5ga7EyhJgKr09M&tb'
-            'nid=cxmFyVXOahzIAM&vet=12''ahUKEwjH37zyrqGIAxXcVkEAHfWfIPMQM3oECEUQAA..i&w=480&h=360&hcb=2&ved=2ahUKEwj'
-            'H37zyrqGIAxXcVkEAHfWfIPMQM3oECEUQAA',
+        'imageUrl': "https://www.pncc.govt.nz/files/assets"
+            "/public/v/3/images/services/rubbish-amp-recycling/recycling-facility.jpg?w=1200",
       },
       // Add more agents as needed
     ];
