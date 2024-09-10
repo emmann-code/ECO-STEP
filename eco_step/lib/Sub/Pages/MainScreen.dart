@@ -1,4 +1,5 @@
 import 'package:eco_step/Sub/Pages/Education/initaialedu_page.dart';
+import 'package:eco_step/Sub/Pages/Scan/testscan.dart';
 import 'package:flutter/material.dart';
 import '../Components/my_bottomnav.dart';
 import 'BenefitShop/buildshop_product.dart';
@@ -49,6 +50,8 @@ class _MainScreenState extends State<MainScreen> {
     switch (_selectedIndex) {
       case 0:
         return InitialMapPage();
+        // return BarcodeScannerPage();
+        // return BarcodeScannerScreen();
       case 1:
         return BenefitShop(email: String.fromEnvironment(""));
       case 2:

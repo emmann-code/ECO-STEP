@@ -28,7 +28,7 @@ class EventDetailsPage extends StatelessWidget {
             Stack(
               children: [
                 Image.asset(
-                  'assets/eventdetailspic.png', // Event image URL
+                  '${event['image']}', // Event image URL
                   width: double.infinity,
                   height: 200,
                   fit: BoxFit.cover,

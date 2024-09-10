@@ -90,7 +90,7 @@ class _JoinEventPageState extends State<JoinEventPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset('assets/eventdetailspic.png', height: 200), // Placeholder event image
+                Image.asset('${widget.event['image']}', height: 200), // Placeholder event image
                 Text(
                   'Event: ${widget.event['title']}',
                   style: TextStyle(fontSize: 16),

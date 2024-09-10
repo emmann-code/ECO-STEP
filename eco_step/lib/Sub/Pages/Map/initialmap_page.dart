@@ -243,7 +243,7 @@ class _InitialMapPageState extends State<InitialMapPage> with AutomaticKeepAlive
         title: Text(
           "Map",
           style: GoogleFonts.roboto(
-            fontSize: 30,
+            fontSize: 23,
             fontWeight: FontWeight.bold,
           ),
         ),

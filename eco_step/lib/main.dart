@@ -2,6 +2,7 @@ import 'package:eco_step/Sub/Pages/Education/initaialedu_page.dart';
 import 'package:eco_step/Sub/Pages/MainScreen.dart';
 import 'package:eco_step/Sub/Pages/Profile/profile.dart';
 import 'package:eco_step/Sub/Pages/Scan/scan_page.dart';
+import 'package:eco_step/Sub/Pages/Scan/testscan.dart';
 import 'package:eco_step/Sub/SignIn&Up/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -87,8 +88,6 @@ class _MyAppState extends State<MyApp> {
         return supportedLocales.first;
       },
       home: OnboardingScreen(),
-      // home: SplashScreenUI(),
-      // home: SplashScreen(),
       // home: MainScreen(),
       // initialRoute: '/onboard',
       routes: {

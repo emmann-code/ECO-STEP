@@ -3,6 +3,7 @@ import 'package:eco_step/Sub/Pages/Map/initialmap_page.dart';
 import 'package:eco_step/Sub/Pages/Scan/scan_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ItemDetailScreen extends StatelessWidget {
   final String itemName;
@@ -38,30 +39,43 @@ class ItemDetailScreen extends StatelessWidget {
         child: Column(
           children: [
             Image.asset(itemImage, height: 150.0),
-            SizedBox(height: 20.0),
+            SizedBox(height: 10.0),
             Text(
               itemName,
-              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+              style: GoogleFonts.racingSansOne(
+            fontSize: 28,
+              fontWeight: FontWeight.bold,
+            ),
             ),
             SizedBox(height: 10.0),
             Text(
-              'Bottle material: $material',
-              style: TextStyle(fontSize: 16.0),
+              'Packaging: $material',
+              style: GoogleFonts.roboto(
+            fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
             ),
             Text(
               'Cap material: $capMaterial',
-              style: TextStyle(fontSize: 16.0),
+              style: GoogleFonts.roboto(
+            fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
             ),
             SizedBox(height: 20.0),
             Text(
               'Disposal recommendations:',
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              style: GoogleFonts.aboreto(
+            fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
             ),
             ...disposalRecommendations.map((recommendation) => Padding(
               padding: const EdgeInsets.only(top: 4.0),
               child: Text(
                 recommendation,
-                style: TextStyle(fontSize: 16.0),
+                style: GoogleFonts.roboto(
+                  fontSize: 16,),
               ),
             )),
             SizedBox(height: 20.0),
