@@ -29,7 +29,7 @@ class _ProfilepicState extends State<Profilepic> {
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery,preferredCameraDevice: CameraDevice.front);
 
     if (pickedFile != null) {
       setState(() {

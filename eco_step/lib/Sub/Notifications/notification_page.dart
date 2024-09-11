@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class NotificationsPage extends StatelessWidget {
   final List<Map<String, String>> notifications;
@@ -8,12 +9,16 @@ class NotificationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Notifications')),
+      appBar: AppBar(title: Text('Notifications', style: GoogleFonts.roboto(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),),),
       body: ListView.builder(
         itemCount: notifications.length,
         itemBuilder: (context, index) {
           final notification = notifications[index];
           return ListTile(
+            tileColor: Theme.of(context).colorScheme.secondary,
             title: Text(notification['title']!),
             subtitle: Text(notification['body']!),
             trailing: Text(notification['name']!),

@@ -30,7 +30,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.7),
+      // backgroundColor: Theme.of(context).colorScheme.inversePrimary.withOpacity(0.7),
       body: _getSelectedScreen(),
       bottomNavigationBar: CustomBottomNavBar(
         selectedIndex: _selectedIndex,

@@ -1,5 +1,6 @@
 import 'package:eco_step/Sub/Pages/MainScreen.dart';
 import 'package:eco_step/Sub/Pages/Map/initialmap_page.dart';
+import 'package:eco_step/Sub/Pages/Scan/scan_list.dart';
 import 'package:eco_step/Sub/Pages/Scan/scan_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
@@ -103,6 +104,22 @@ class ScannedlistDetailsItemDetailScreen extends StatelessWidget {
                   },
                   child: Text('Find a recycling cntr',style: TextStyle(color: Theme.of(context).colorScheme.background,),),
                 ),
+              ],
+            ),
+            SizedBox(height: 20,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("If Item Data is not found pls refer \nto list to get info. ", style: GoogleFonts.roboto(fontSize: 20,),),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => PackagingTypesScreen()),
+                    );
+                  },
+                    child: Text("Select item",style: TextStyle(color: Colors.greenAccent,fontWeight: FontWeight.bold,fontSize: 12),)
+                )
               ],
             ),
           ],

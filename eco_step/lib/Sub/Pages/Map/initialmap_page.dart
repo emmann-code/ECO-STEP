@@ -163,7 +163,7 @@ class _InitialMapPageState extends State<InitialMapPage> with AutomaticKeepAlive
     // Ensure _currentLocation is not null before proceeding
     if (_currentLocation == null) {
       print('Current location is not available.');
-      return;
+      return _navigateToSearchedMarker();
     }
 
     // Create a MapController to interact with the map
@@ -176,7 +176,7 @@ class _InitialMapPageState extends State<InitialMapPage> with AutomaticKeepAlive
     // Drawing a polyline (example using two points - origin and destination)
     List<LatLng> route = [
       _currentLocation!, // Your current location
-      destinationLatLng
+      destinationLatLng,marker.point
     ];
 
     // Add your polyline to the map's polyline layer
