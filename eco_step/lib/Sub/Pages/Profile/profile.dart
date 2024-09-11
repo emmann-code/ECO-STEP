@@ -5,10 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../Notifications/notification_page.dart';
+
 class ProfilePage extends StatefulWidget {
   final String email;
+  final List<Map<String, String>> notifications;
 
-  const ProfilePage({super.key, required this.email});
+  const ProfilePage({super.key, required this.email, required this.notifications});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -79,6 +82,22 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: Theme.of(context).colorScheme.background,
         elevation: 0,
         automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+              // onPressed: (){
+              //   Navigator.pushNamed(context, '/notifi');
+              // },
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NotificationsPage(notifications: []),
+                  ),
+                );
+              },
+              icon: Icon(Icons.notifications)
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),

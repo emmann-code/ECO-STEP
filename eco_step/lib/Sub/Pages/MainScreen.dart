@@ -57,7 +57,7 @@ class _MainScreenState extends State<MainScreen> {
       case 2:
         return  EducationScreen();
       case 3:
-        return ProfilePage(email: String.fromEnvironment(""),);
+        return ProfilePage(email: String.fromEnvironment(""), notifications: [],);
       case 4:
       default:
         return ScanScreen(); // Default screen
