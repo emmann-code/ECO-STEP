@@ -17,11 +17,14 @@ class NotificationsPage extends StatelessWidget {
         itemCount: notifications.length,
         itemBuilder: (context, index) {
           final notification = notifications[index];
-          return ListTile(
-            tileColor: Theme.of(context).colorScheme.secondary,
-            title: Text(notification['title']!),
-            subtitle: Text(notification['body']!),
-            trailing: Text(notification['name']!),
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListTile(
+              tileColor: Theme.of(context).colorScheme.secondary,
+              title: Text(notification['title']!),
+              subtitle: Text(notification['body']!),
+              trailing: Text(notification['name']!),
+            ),
           );
         },
       ),

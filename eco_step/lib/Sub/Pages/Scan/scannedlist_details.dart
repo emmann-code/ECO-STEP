@@ -43,8 +43,8 @@ class ScannedlistDetailsItemDetailScreen extends StatelessWidget {
             SizedBox(height: 10.0),
             Text(
               itemName,
-              style: GoogleFonts.racingSansOne(
-                fontSize: 28,
+              style: GoogleFonts.aboreto(
+                fontSize: 23,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -110,7 +110,7 @@ class ScannedlistDetailsItemDetailScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("If Item Data is not found pls refer \nto list to get info. ", style: GoogleFonts.roboto(fontSize: 20,),),
+                Text("If Item Data is not found pls refer \nto list to get more info. ", style: GoogleFonts.roboto(fontSize: 20,),),
                 GestureDetector(
                   onTap: (){
                     Navigator.push(

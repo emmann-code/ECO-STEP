@@ -1,11 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eco_step/Sub/Pages/Scan/scan_list.dart';
 import 'package:eco_step/Sub/Pages/Scan/scannedlist_details.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 import '../../Components/my_button.dart';
 
 class ScanScreen extends StatefulWidget {
@@ -17,10 +18,11 @@ class ScanScreen extends StatefulWidget {
 
 class _ScanScreenState extends State<ScanScreen> with SingleTickerProviderStateMixin {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-
+  QRViewController? _controller;
+  final TextEditingController _barcodeController = TextEditingController();
 
   // Animation controller
-  late AnimationController _controller;
+  late AnimationController _animationController;
   late Animation<double> _animation;
 
   @override
@@ -28,84 +30,89 @@ class _ScanScreenState extends State<ScanScreen> with SingleTickerProviderStateM
     super.initState();
 
     // Initialize the AnimationController
-    _controller = AnimationController(
+    _animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3),
     )..repeat(reverse: true); // Loop the animation
 
     // Initialize the Animation using the controller
-    _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
+    _animation = Tween<double>(begin: 0, end: 1).animate(_animationController);
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _animationController.dispose();
+    _controller?.dispose();
+    _barcodeController.dispose();
     super.dispose();
   }
 
-
-  String _barcode = '';
-  bool _isFlashOn = false;
-
-  // Toggle flashlight
   void _toggleFlashlight() {
-    setState(() {
-      _isFlashOn = !_isFlashOn;
-    });
+    _controller?.toggleFlash();
   }
 
-  // Function to scan barcode
-  Future<void> scanBarcode() async {
+  void _scanQRCode() async {
     try {
-      var result = await FlutterBarcodeScanner.scanBarcode(
-        '#FF0000', // Line color
-        'Cancel',   // Cancel button text
-        true,       // Show flash icon
-        ScanMode.DEFAULT, // Scan mode (Barcode or QR code)
+      await _controller?.pauseCamera();
+      var result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => QRView(
+            key: qrKey,
+            onQRViewCreated: _onQRViewCreated,
+            overlay: QrScannerOverlayShape(
+              borderColor: Colors.red,
+              borderRadius: 10,
+              borderLength: 30,
+              borderWidth: 10,
+              cutOutSize: 300,
+            ),
+          ),
+        ),
       );
-      if (result != '-1') {
+
+      if (result != null) {
         setState(() {
-          _barcode = result;
+          _fetchProductData(result);
         });
-        if (_barcode.isNotEmpty) {
-          fetchProductData(_barcode); // Fetch data after scanning
-        }
       }
     } catch (e) {
-      print("Barcode scan failed: $e");
+      print("QR Code scan failed: $e");
     }
   }
 
-  // Function to fetch product data from OpenFoodFacts API
-  Future<void> fetchProductData(String barcode) async {
+  void _onQRViewCreated(QRViewController controller) {
+    setState(() {
+      _controller = controller;
+      _controller?.scannedDataStream.listen((scanData) {
+        _controller?.pauseCamera();
+        Navigator.pop(context, scanData.code);
+      });
+    });
+  }
+
+  Future<void> _fetchProductData(String barcode) async {
     final url = Uri.parse('https://world.openfoodfacts.org/api/v0/product/$barcode.json');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
 
-      // Debug: Print the response to understand its structure
-      print('Response data: $data');
-
       if (data['status'] == 1) {
         final product = data['product'];
-        // Product Name
-        final productName = product['product_name'] ?? 'Unknown Product';
-        // Packaging Information
-        final packaging = product['packaging'] is List
-            ? product['packaging'].join(', ')
-            : product['packaging'] ?? 'Unknown Packaging';
-        // Image URL
-        final image = product['selected_images']?['front']?['display']['url'] ?? 'Unknown Image';
-        // Cap Material (Assuming it's part of the packaging or a related field)
-        final capMaterial = product['cap_material'] ??
-            product['packaging_material']?.firstWhere(
-                  (material) => material.contains('cap'),
-              orElse: () => 'Unknown Cap Material',
-            );
 
+        final productName = product['product_name']?.toString() ?? 'Unknown Product';
+        final packagingData = product['packaging'] ?? 'Unknown Packaging';
+        final packagingKey = (packagingData is Map && packagingData.containsKey('non_recyclable_and_non_biodegradable_materials'))
+            ? 'non_recyclable_and_non_biodegradable_materials'
+            : 'Unknown Packaging';
+        final image = product['selected_images']?['front']?['display']?['url']?.toString() ?? 'Unknown Image';
+        final capMaterial = product['cap_material']?.toString() ?? product['packaging_material']?.firstWhere(
+              (material) => material.toString().contains('cap'),
+          orElse: () => 'Unknown Cap Material',
+        ).toString();
 
-        final materialType = _getMaterialType(packaging);
+        final materialType = _getMaterialType(packagingKey);
         final disposalInstructions = _getDisposalInstructions(materialType);
 
         Navigator.push(
@@ -115,11 +122,13 @@ class _ScanScreenState extends State<ScanScreen> with SingleTickerProviderStateM
               itemName: productName,
               itemImage: image,
               material: materialType,
-              capMaterial: 'None', // Adjust as needed
+              capMaterial: capMaterial.toString(),
               disposalRecommendations: disposalInstructions,
             ),
           ),
         );
+
+        _incrementEcoPoints(5);
       } else {
         _showErrorDialog('Product not found');
       }
@@ -128,7 +137,18 @@ class _ScanScreenState extends State<ScanScreen> with SingleTickerProviderStateM
     }
   }
 
-// Helper method to get material type based on packaging
+  void _incrementEcoPoints(int points) {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId != null) {
+      final userRef = FirebaseFirestore.instance.collection('users').doc(userId);
+      FirebaseFirestore.instance.runTransaction((transaction) async {
+        final snapshot = await transaction.get(userRef);
+        final currentPoints = snapshot.data()?['ecoPoints'] ?? 0;
+        transaction.update(userRef, {'ecoPoints': currentPoints + points});
+      });
+    }
+  }
+
   String _getMaterialType(String packaging) {
     if (packaging.contains('plastic')) {
       return 'Plastic';
@@ -141,7 +161,6 @@ class _ScanScreenState extends State<ScanScreen> with SingleTickerProviderStateM
     }
   }
 
-// Helper method to get disposal instructions based on material type
   List<String> _getDisposalInstructions(String materialType) {
     switch (materialType) {
       case 'Plastic':
@@ -155,7 +174,6 @@ class _ScanScreenState extends State<ScanScreen> with SingleTickerProviderStateM
     }
   }
 
-  // Show error dialog
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
@@ -173,6 +191,41 @@ class _ScanScreenState extends State<ScanScreen> with SingleTickerProviderStateM
           ],
         );
       },
+    );
+  }
+
+  void _handleBarcodeEntry() {
+    final barcode = _barcodeController.text.trim();
+    if (barcode.isNotEmpty) {
+      _fetchProductData(barcode);
+    }
+  }
+
+  Widget _buildManualBarcodeEntry() {
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            controller: _barcodeController,
+            decoration: InputDecoration(
+              fillColor: Theme.of(context).colorScheme.secondary,
+              filled: true,
+              labelText: 'Enter Barcode Manually',
+              border: OutlineInputBorder(),
+            ),
+            keyboardType: TextInputType.number,
+          ),
+        ),
+        SizedBox(width: 16),
+        ElevatedButton(
+          onPressed: _handleBarcodeEntry,
+          child: Text('Done',
+            style: TextStyle(color: Theme.of(context).colorScheme.background),),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          ),
+        ),
+      ],
     );
   }
 
@@ -200,7 +253,7 @@ class _ScanScreenState extends State<ScanScreen> with SingleTickerProviderStateM
             child: Container(
               child: IconButton(
                 onPressed: _toggleFlashlight,
-                icon: Icon(_isFlashOn ? Icons.flashlight_off : Icons.flashlight_on),
+                icon: Icon(Icons.flashlight_on),
               ),
             ),
           )
@@ -208,24 +261,13 @@ class _ScanScreenState extends State<ScanScreen> with SingleTickerProviderStateM
       ),
       body: Stack(
         children: <Widget>[
-          // Positioned(
-          //   bottom: 0,
-          //   left: 0,
-          //   right: 0,
-          //   child: Container(
-          //     color: Colors.grey,
-          //     child: Image.asset("assets/bottle.png",scale: 3,),
-          //   ),
-          // ),
           Positioned(
             bottom: 0,
             left: 0,
             right: 0,
             child: Container(
               color: Colors.grey,
-              child: _animation == null
-                  ? Container() // Prevent accessing the uninitialized animation
-                  : RotationTransition(
+              child: RotationTransition(
                 turns: _animation,
                 child: Image.asset(
                   "assets/bottle.png",
@@ -244,29 +286,7 @@ class _ScanScreenState extends State<ScanScreen> with SingleTickerProviderStateM
             bottom: 270,
             left: 16,
             right: 16,
-            child: GestureDetector(
-              onTap: scanBarcode,
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 60.0, vertical: 0.0),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                  borderRadius: BorderRadius.circular(32),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      onPressed: scanBarcode,
-                      icon: Icon(Icons.camera_alt, color: Theme.of(context).colorScheme.background),
-                    ),
-                    Text(
-                      'Scan Barcode',
-                      style: TextStyle(color: Theme.of(context).colorScheme.background),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            child: _buildScanButton(),
           ),
           Positioned(
             bottom: 20,
@@ -274,51 +294,20 @@ class _ScanScreenState extends State<ScanScreen> with SingleTickerProviderStateM
             right: 16,
             child: Column(
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          fillColor: Theme.of(context).colorScheme.secondary,
-                          filled: true,
-                          border: OutlineInputBorder(),
-                          labelText: 'Enter barcode manually',
-                        ),
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          _barcode = value;
-                        },
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_barcode.isNotEmpty) {
-                          fetchProductData(_barcode);
-                        } else {
-                          _showErrorDialog('Please enter a valid barcode');
-                        }
-                      },
-                      child: Text(
-                        'Done',
-                        style: TextStyle(color: Theme.of(context).colorScheme.background),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-                      ),
-                    ),
-                  ],
-                ),
+                _buildManualBarcodeEntry(),
                 SizedBox(height: 10),
                 MyButton(
                   text: "Select from the list",
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => PackagingTypesScreen()),
+                      MaterialPageRoute(
+                        builder: (context) =>  PackagingTypesScreen(),
+                      ),
                     );
                   },
                 ),
+                SizedBox(height: 20),
               ],
             ),
           ),
@@ -326,4 +315,44 @@ class _ScanScreenState extends State<ScanScreen> with SingleTickerProviderStateM
       ),
     );
   }
+
+  Widget _buildScanButton() {
+    return GestureDetector(
+      onTap: _scanQRCode,
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 60.0),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.inversePrimary,
+          borderRadius: BorderRadius.circular(32),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              onPressed: _scanQRCode,
+              icon: Icon(Icons.camera_alt, color: Theme.of(context).colorScheme.background),
+            ),
+            Text(
+              'Scan Barcode',
+              style: TextStyle(color: Theme.of(context).colorScheme.background),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
+// import 'package:flutter/material.dart';
+// class ScanScreen extends StatefulWidget {
+//   const ScanScreen({super.key});
+//
+//   @override
+//   State<ScanScreen> createState() => _ScanScreenState();
+// }
+//
+// class _ScanScreenState extends State<ScanScreen> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(backgroundColor: Colors.red,);
+//   }
+// }

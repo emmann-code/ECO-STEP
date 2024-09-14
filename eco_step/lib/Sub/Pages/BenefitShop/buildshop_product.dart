@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eco_step/Sub/Pages/BenefitShop/shop_product.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -17,27 +18,66 @@ class BenefitShop extends StatefulWidget {
 class _BenefitShopState extends State<BenefitShop> {
   String? _profileImageUrl;  // This will store the profile image URL
   String? username;
+  int ecoPoints = 0; // Eco points initialized to 0
 
   @override
   void initState() {
     super.initState();
     _getEcoPoints(); // Fetch eco points from Firebase
+    loadUserProfile();
   }
 
-
-  int ecoPoints = 0; // Eco points initialized to 0
-
   // Function to fetch eco points from Firestore
-  void _getEcoPoints() async {
+  Future<int> _getEcoPoints() async {
     try {
-      String userId = 'user-id'; // Replace with the actual user ID from your auth
-      DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('users').doc(userId).get();
-      // Cast the snapshot data to Map<String, dynamic>
-      setState(() {
-        ecoPoints = (snapshot.data() as Map<String, dynamic>)['ecoPoints'] ?? 0; // Get the ecoPoints or default to 0
-      });
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId == null) {
+        print("User is not logged in");
+        return 0;
+      }
+      final userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+      if (userDoc.exists) {
+        return userDoc.data()?['ecoPoints'] ?? 0;
+      } else {
+        print("User document not found");
+        return 0;
+      }
     } catch (e) {
       print("Error fetching eco points: $e");
+      return 0;
+    }
+  }
+
+  Future<void> loadUserProfile() async {
+    try {
+      // Fetch the user profile document from Firestore
+      DocumentSnapshot<Map<String, dynamic>> userProfile = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .get();
+
+      if (userProfile.exists) {
+        // Check and handle the "profileImage" field
+        String? profileImageUrl;
+        if (userProfile.data()!.containsKey('profileImage')) {
+          profileImageUrl = userProfile.data()!['profileImage'];
+        } else {
+          print('Profile image not set');
+        }
+
+        // Check and handle the "name" field
+        String username = userProfile.data()!['username'] ?? 'No name set';
+
+        setState(() {
+          _profileImageUrl = profileImageUrl;
+          this.username = username;
+        });
+
+      } else {
+        print('User profile does not exist');
+      }
+    } catch (e) {
+      print('Failed to load user profile: $e');
     }
   }
 
@@ -71,7 +111,11 @@ class _BenefitShopState extends State<BenefitShop> {
                 children: [
                   Profilepic(
                     onImageSelected: (String imagePath) {
-                      // No action needed here
+                      // Update the profile image URL and reload the profile
+                      setState(() {
+                        _profileImageUrl = imagePath;
+                      });
+                      loadUserProfile();
                     },
                     imageUrl: _profileImageUrl,  // Pass the image URL
                     showCameraIcon: false,  // Ensure the camera icon is not shown
@@ -80,7 +124,7 @@ class _BenefitShopState extends State<BenefitShop> {
                   Text(
                     'Hi, ${username ?? 'User'}!',
                     style: GoogleFonts.roboto(
-                      fontSize: 20,
+                      fontSize: 15,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -113,7 +157,6 @@ class _BenefitShopState extends State<BenefitShop> {
                                     SizedBox(width: 5),
                                     Text(
                                       '$ecoPoints Eco-Points',
-
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14,

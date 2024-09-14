@@ -1,9 +1,24 @@
-allprojects {
+buildscript {
+    ext.kotlin_version = '1.8.21' // Update Kotlin version
     repositories {
         google()
         mavenCentral()
     }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.android.tools.build:gradle:8.1.0' // Make sure Gradle plugin is up to date
+    }
+    subprojects {
+        tasks.withType(JavaCompile).tap {
+            configureEach {
+                sourceCompatibility = JavaVersion.VERSION_1_8 // or VERSION_17 if targeting 17
+                targetCompatibility = JavaVersion.VERSION_1_8 // or VERSION_17 if targeting 17
+            }
+        }
+    }
+
 }
+
 
 rootProject.buildDir = "../build"
 subprojects {

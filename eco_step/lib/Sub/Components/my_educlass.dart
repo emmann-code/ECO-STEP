@@ -1,6 +1,8 @@
 import 'package:eco_step/Sub/Pages/Education/jionevent.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share/share.dart';
+import 'my_newslistile.dart';
 
 class EventDetailsPage extends StatelessWidget {
   final Map<String, String> event;
@@ -83,11 +85,13 @@ class EventDetailsPage extends StatelessWidget {
                   child: CircleAvatar(
                     backgroundColor: Theme.of(context).colorScheme.inversePrimary,
                     child: IconButton(
-                      icon: Icon(Icons.share, color:Colors.white),
+                      icon: Icon(Icons.share, color: Colors.white),
                       onPressed: () {
-                        // Share event action
+                        final shareText = 'Check out this event: ${event['title']} on ${event['date']} at location 53.283386, 24.228394. Sponsored by ${event['organizer']}';
+                        Share.share(shareText);
                       },
                     ),
+
                   ),
                 ),
               ],
@@ -210,7 +214,7 @@ class ArticleDetailsPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         title: Text(
-          article['title']!,
+          'Trending News!',
           style: GoogleFonts.poppins(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -222,93 +226,99 @@ class ArticleDetailsPage extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Display the image at the top (similar to the provided UI)
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                article['image']!,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            ),
-            SizedBox(height: 10),
-
-            // Add time and date badges as in the UI
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.timer, size: 18, color: Colors.grey[600]),
-                      SizedBox(width: 4),
-                      Text(
-                        '${article['time']}',
-                        style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Display the image at the top (similar to the provided UI)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  child: Image.asset(
+                    article['image']!,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    '${article['date']}',
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      color: Colors.grey[600],
+              ),
+              SizedBox(height: 10),
+        
+              // Add time and date badges as in the UI
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.timer, size: 18, color: Colors.grey[600]),
+                        SizedBox(width: 4),
+                        Text(
+                          '${article['time']}',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      '${article['date']}',
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+        
+              // Title
+              Text(
+                article['title']!,
+                style: GoogleFonts.poppins(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-            ),
-            SizedBox(height: 10),
-
-            // Title
-            Text(
-              article['title']!,
-              style: GoogleFonts.poppins(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
               ),
-            ),
-            SizedBox(height: 10),
-
-            // Description / About section
-            Text(
-              'About',
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+              SizedBox(height: 10),
+        
+              // Description / About section
+              Text(
+                'About',
+                style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              article['description'] ?? ' Lorem ipsum dolor sit, amet '
-                  'consectetur adipisicing elit'
-                  '. Nemo beatae molestiae corrupti sequi! Ipsum, '
-                  'dolorum, a natus deserunt inventore id soluta quos. ',
-              style: GoogleFonts.poppins(fontSize: 14),
-            ),
-
-            // Additional information if necessary
-          ],
+              SizedBox(height: 8),
+              Text(
+                article['description'] ?? 'The growing impacts of climate change are becoming more evident each day, with global warming accelerating at an alarming pace. Rising temperatures are not only melting polar ice caps, but also intensifying natural disasters such as hurricanes, floods, and wildfires across the globe. Experts warn that if global emissions are not curbed, these events will become more frequent and more severe, affecting millions of people worldwide.'
+        
+                    'In addition to climate change, oil spills remain a significant environmental concern, devastating marine ecosystems and coastal communities. Recent spills have caused widespread damage, threatening the survival of countless species and polluting water sources that people rely on. Governments and organizations are being urged to strengthen regulations and take immediate action to prevent further incidents.'
+        
+                    'Recycling, often touted as a solution to the growing waste crisis, is still underutilized in many parts of the world. While some nations have made strides in implementing recycling programs, others lag behind, contributing to the mounting problem of plastic pollution. Addressing these issues requires global cooperation, as well as individual commitment to reducing waste and supporting sustainable practices.',
+                style: GoogleFonts.poppins(fontSize: 14),
+              ),
+        
+        
+              // Additional information if necessary
+            ],
+          ),
         ),
       ),
     );

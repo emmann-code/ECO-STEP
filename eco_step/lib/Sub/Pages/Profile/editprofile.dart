@@ -21,8 +21,13 @@ class _EditprofileState extends State<Editprofile> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   String? _imagePath;
+  bool _isLoading = false; // Track loading state
+
 
   Future<void> _saveProfile() async {
+    setState(() {
+      _isLoading = true;
+    });
     try {
       print('Saving profile...');
       String? imageUrl;
@@ -73,6 +78,10 @@ class _EditprofileState extends State<Editprofile> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to update profile: $e')),
       );
+    }finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -160,6 +169,8 @@ class _EditprofileState extends State<Editprofile> {
             MyButton(
               text: "Save",
               onTap: _saveProfile, // Trigger the save profile function
+              isLoading: _isLoading,
+
             ),
           ],
         ),

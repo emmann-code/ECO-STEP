@@ -1,17 +1,20 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Profilepic extends StatefulWidget {
   final Function(String) onImageSelected;
   final String? imageUrl;
-  final bool showCameraIcon;  // Add this parameter
+  final bool showCameraIcon;
 
   const Profilepic({
     super.key,
     required this.onImageSelected,
     this.imageUrl,
-    this.showCameraIcon = false,  // Default to false if not provided
+    this.showCameraIcon = false,
   });
 
   @override
@@ -24,21 +27,54 @@ class _ProfilepicState extends State<Profilepic> {
   @override
   void initState() {
     super.initState();
-    _imagePath = widget.imageUrl;  // Set the initial image path to the URL
+    _imagePath = widget.imageUrl;  // Use the provided imageUrl if available
   }
 
-  Future<void> _pickImage() async {
+  Future<void> _pickImage(ImageSource  source) async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery,preferredCameraDevice: CameraDevice.front);
+    final pickedFile = await picker.pickImage(source: source);
 
     if (pickedFile != null) {
       setState(() {
         _imagePath = pickedFile.path;
       });
-
+      await _uploadImage();
       widget.onImageSelected(_imagePath!);
     }
   }
+
+
+  Future<String?> _uploadImage() async {
+    if (_imagePath == null) return null;
+
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) return null;
+
+      String uid = user.uid;
+      Reference storageRef =
+      FirebaseStorage.instance.ref().child('profile_images').child(uid);
+      UploadTask uploadTask = storageRef.putFile(_imagePath! as File);
+
+      TaskSnapshot taskSnapshot = await uploadTask;
+      String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+
+      // Update Firestore with the new image URL
+      await FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'profileImage': downloadUrl,
+      });
+
+      setState(() {
+        _imagePath = downloadUrl;
+      });
+
+      return downloadUrl;
+    } catch (e) {
+      print('Error uploading image: $e');
+      return null;
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -54,17 +90,19 @@ class _ProfilepicState extends State<Profilepic> {
                   ? FileImage(File(_imagePath!))
                   : widget.imageUrl != null
                   ? NetworkImage(widget.imageUrl!) as ImageProvider
-                  : AssetImage('assets/profile.png'),
+                  : const AssetImage('assets/profile.png'),
               fit: BoxFit.cover,
             ),
           ),
         ),
-        if (widget.showCameraIcon)  // Conditionally show the camera icon
+        if (widget.showCameraIcon)
           Positioned(
             bottom: 0,
             right: 0,
             child: GestureDetector(
-              onTap: _pickImage,
+              onTap: () {
+                _pickImage(ImageSource.gallery);
+              },
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,

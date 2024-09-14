@@ -17,11 +17,15 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmpasswordController = TextEditingController();
   final TextEditingController usernameController = TextEditingController(); // New field for username
+  bool _isLoading = false;
 
   // register method
   void register() async {
     // get auth service
     final _authService = AuthService();
+    setState(() {
+      _isLoading = true;
+    });
 
     // check if passwords match => create user
     if (passwordController.text == confirmpasswordController.text) {
@@ -37,7 +41,7 @@ class _RegisterPageState extends State<RegisterPage> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text(e.toString()),
+            title: Text(' Error: ${e.toString()} '),
           ),
         );
       }
@@ -48,6 +52,9 @@ class _RegisterPageState extends State<RegisterPage> {
           title: Text("Passwords don't match"),
         ),
       );
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -111,6 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
             MyButton(
               text: 'Sign Up',
               onTap: register,
+              isLoading: _isLoading,
             ),
             SizedBox(height: 30),
             Center(

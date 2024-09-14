@@ -24,45 +24,64 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    _loadUserProfile();
+    loadUserProfile();
     _getEcoPoints(); // Fetch eco points from Firebase
   }
 
-  Future<void> _loadUserProfile() async {
+  Future<void> loadUserProfile() async {
     try {
-      // Fetch the user's profile data from Firestore
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+      // Fetch the user profile document from Firestore
+      DocumentSnapshot<Map<String, dynamic>> userProfile = await FirebaseFirestore.instance
           .collection('users')
-          .doc(widget.email)  // Ensure this is the correct document ID
+          .doc(FirebaseAuth.instance.currentUser?.uid)
           .get();
 
-      // Ensure that the document exists before accessing its data
-      if (userDoc.exists) {
+      if (userProfile.exists) {
+        // Check and handle the "profileImage" field
+        String? profileImageUrl;
+        if (userProfile.data()!.containsKey('profileImage')) {
+          profileImageUrl = userProfile.data()!['profileImage'];
+        } else {
+          print('Profile image not set');
+        }
+
+        // Check and handle the "name" field
+        String username = userProfile.data()!['username'] ?? 'No name set';
+
         setState(() {
-          _profileImageUrl = userDoc['profileImage'] as String?;
-          username = userDoc['username'] as String? ?? 'User';  // Use 'username' to match Firestore field
+          _profileImageUrl = profileImageUrl;
+          this.username = username;
         });
+
       } else {
-        print('User document does not exist');
+        print('User profile does not exist');
       }
     } catch (e) {
       print('Failed to load user profile: $e');
     }
   }
 
+
   int ecoPoints = 0; // Eco points initialized to 0
 
   // Function to fetch eco points from Firestore
-  void _getEcoPoints() async {
+  Future<int> _getEcoPoints() async {
     try {
-      String userId = 'user-id'; // Replace with the actual user ID from your auth
-      DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('users').doc(userId).get();
-      // Cast the snapshot data to Map<String, dynamic>
-      setState(() {
-        ecoPoints = (snapshot.data() as Map<String, dynamic>)['ecoPoints'] ?? 0; // Get the ecoPoints or default to 0
-      });
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId == null) {
+        print("User is not logged in");
+        return 0;
+      }
+      final userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+      if (userDoc.exists) {
+        return userDoc.data()?['ecoPoints'] ?? 0;
+      } else {
+        print("User document not found");
+        return 0;
+      }
     } catch (e) {
       print("Error fetching eco points: $e");
+      return 0;
     }
   }
 
@@ -84,14 +103,11 @@ class _ProfilePageState extends State<ProfilePage> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-              // onPressed: (){
-              //   Navigator.pushNamed(context, '/notifi');
-              // },
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => NotificationsPage(notifications: []),
+                    builder: (context) => NotificationsPage(notifications: widget.notifications),
                   ),
                 );
               },
@@ -111,7 +127,11 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 Profilepic(
                   onImageSelected: (String imagePath) {
-                    // No action needed here
+                    // Update the profile image URL and reload the profile
+                    setState(() {
+                      _profileImageUrl = imagePath;
+                    });
+                    loadUserProfile();
                   },
                   imageUrl: _profileImageUrl,  // Pass the image URL
                   showCameraIcon: false,  // Ensure the camera icon is not shown
@@ -120,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Text(
                   'Hi, ${username ?? 'User'}!',
                   style: GoogleFonts.roboto(
-                    fontSize: 20,
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

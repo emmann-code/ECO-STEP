@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -215,22 +216,35 @@ class _InitialMapPageState extends State<InitialMapPage> with AutomaticKeepAlive
     }
   }
 
+  void incrementEcoPoints(int points) async {
+    try {
+      final userId = FirebaseAuth.instance.currentUser?.uid; // Use current user's ID
+      if (userId == null) {
+        print("User is not logged in");
+        return;
+      }
+      final userRef = FirebaseFirestore.instance.collection('users').doc(userId);
+
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        final snapshot = await transaction.get(userRef);
+        if (!snapshot.exists) {
+          throw Exception("User does not exist!");
+        }
+        final currentPoints = snapshot.data()?['ecoPoints'] ?? 0;
+        transaction.update(userRef, {'ecoPoints': currentPoints + points});
+      });
+    } catch (e) {
+      print("Failed to increment eco points: $e");
+    }
+  }
+
+
+
 // Ensure non-null location in checkIfUserReachedDestination
   bool checkIfUserReachedDestination(LatLng userLocation, LatLng destination) {
     final Distance distance = Distance();
     double distanceToDestination = distance.as(LengthUnit.Meter, userLocation, destination);
     return distanceToDestination < 50.0; // If within 50 meters, consider it reached
-  }
-
-  void incrementEcoPoints(int points) {
-    // Add logic to increment eco points in Firebase
-    final userId = 'user-id'; // Replace with actual user ID
-    final userRef = FirebaseFirestore.instance.collection('users').doc(userId);
-    FirebaseFirestore.instance.runTransaction((transaction) async {
-      final snapshot = await transaction.get(userRef);
-      final currentPoints = snapshot.data()?['ecoPoints'] ?? 0;
-      transaction.update(userRef, {'ecoPoints': currentPoints + 5});
-    });
   }
 
   @override

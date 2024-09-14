@@ -1,0 +1,4 @@
+<resources>
+    <string name="default_web_client_id">384320428094-88fhhakq8emn78epcap6gt9us5q9e9pl.apps.googleusercontent.com</string>
+    <string name="firebase_database_url">https://eco-project-5777b-default-rtdb.firebaseio.com/</string>
+</resources>

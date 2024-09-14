@@ -42,8 +42,9 @@ class _JoinEventPageState extends State<JoinEventPage> {
       'event': {
         'title': widget.event['title'],
         'date': widget.event['date'],
-        'location': widget.event['location'],
-        'details': widget.event['details'],
+        'location': widget.event['location'], // Add location
+        'details': widget.event['details'],   // Add details
+        'image': widget.event['image'],       // Add image
       },
       'joinDate': Timestamp.now(),
     };
@@ -59,13 +60,14 @@ class _JoinEventPageState extends State<JoinEventPage> {
         content: Text("You've been added to the event list. We'll contact you via email for more details."),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pushReplacementNamed(context, '/edu'),
+            onPressed: () => Navigator.pushReplacementNamed(context, '/main'),
             child: Text("Thank you"),
           ),
         ],
       ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {

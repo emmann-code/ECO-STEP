@@ -1,5 +1,6 @@
 import 'package:eco_step/Sub/Pages/Profile/about_app.dart';
 import 'package:eco_step/Sub/Pages/Profile/editprofile.dart';
+import 'package:eco_step/Sub/Pages/Profile/my_events.dart';
 import 'package:eco_step/Sub/Pages/Profile/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,6 +33,8 @@ class ProfileContainer extends StatelessWidget {
               fontWeight: FontWeight.bold,),),
             onTap: () {
               // Navigate to My Events Page
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MyEventPage(userEmail: String.fromEnvironment(''))));
+              
             },
             trailing: Icon(Icons.event, color: Colors.black),
             tileColor: Theme.of(context).colorScheme.secondary,

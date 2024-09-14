@@ -2,27 +2,22 @@ import 'package:eco_step/Sub/Notifications/FirebaseNotifiApi.dart';
 import 'package:eco_step/Sub/Notifications/notification_page.dart';
 import 'package:eco_step/Sub/Pages/Education/initaialedu_page.dart';
 import 'package:eco_step/Sub/Pages/MainScreen.dart';
-import 'package:eco_step/Sub/Pages/Profile/profile.dart';
-import 'package:eco_step/Sub/Pages/Scan/scan_page.dart';
-import 'package:eco_step/Sub/Pages/Scan/testscan.dart';
-import 'package:eco_step/Sub/SignIn&Up/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'Sub/Components/my_splash.dart';
-import 'Sub/Pages/Map/initialmap_page.dart';
 import 'Sub/Services/auth/login_or_register.dart';
 import 'Sub/Splah&Onboarding/onboarding_screens.dart';
-import 'Sub/Splah&Onboarding/splash_screen.dart';
 import 'Sub/Themes/theme_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:responsive_framework/responsive_framework.dart'; // Add this line
 
+import 'generated/l10n/app_localziations.dart';
 
 // Localization Imports
-import 'generated/l10n/app_localziations.dart';
 final navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -35,8 +30,6 @@ void main() async {
     ),
   );
 }
-
-
 
 class MyApp extends StatefulWidget {
   final List<Map<String, String>> notifications;
@@ -68,15 +61,7 @@ class _MyAppState extends State<MyApp> {
       locale: _locale,
       supportedLocales: [
         Locale('en', ''), // English
-        Locale('af', ''), // Afrikaans
-        Locale('ar', ''), // Arabic
-        Locale('zh', ''), // Chinese
-        Locale('nl', ''), // Dutch
-        Locale('fr', ''), // French
-        Locale('de', ''), // German
-        Locale('el', ''), // Greek
-        Locale('he', ''), // Hebrew
-        Locale('pl', ''), // Polish
+        // Other supported locales...
       ],
       localizationsDelegates: [
         AppLocalizations.delegate,
@@ -93,18 +78,46 @@ class _MyAppState extends State<MyApp> {
         }
         return supportedLocales.first;
       },
-      // home: FirebaseNotifiApi(),
-      home: OnboardingScreen(),
-      // home: MainScreen(),
-      // initialRoute: '/onboard',
+      home: ResponsiveWrapper.builder(
+        OnboardingScreen(), // Ensure this is your default screen
+        maxWidth: 1200,
+        minWidth: 450,
+        defaultScale: true,
+        breakpoints: [
+          ResponsiveBreakpoint.resize(450, name: MOBILE),
+          ResponsiveBreakpoint.autoScale(800, name: TABLET),
+          ResponsiveBreakpoint.autoScale(1000, name: TABLET),
+          ResponsiveBreakpoint.resize(1200, name: DESKTOP),
+          ResponsiveBreakpoint.autoScale(2460, name: "4K"),
+        ],
+        background: Container(color: Color(0xFFF5F5F5)),
+      ),
       navigatorKey: navigatorKey,
       routes: {
+        '/': (context) => OnboardingScreen(), // This is the root route
         '/notifi': (context) => NotificationsPage(notifications: []),
         '/edu': (context) => EducationScreen(),
         '/main': (context) => MainScreen(),
         '/onboard': (context) => OnboardingScreen(),
         '/login': (context) => LoginOrRegister(),
       },
+      onUnknownRoute: (RouteSettings settings) {
+        return MaterialPageRoute(
+          builder: (context) => OnboardingScreen(), // Fallback screen if route is unknown
+        );
+      },
     );
   }
 }
+
+
+class ResponsiveBreakpoint {
+  static autoScale(int i, {required String name}) {}
+
+  static resize(int i, {required String name}) {}
+}
+
+class ResponsiveWrapper {
+  static builder(OnboardingScreen onboardingScreen, {required int maxWidth, required int minWidth, required bool defaultScale, required List breakpoints, required Container background}) {}
+}
+

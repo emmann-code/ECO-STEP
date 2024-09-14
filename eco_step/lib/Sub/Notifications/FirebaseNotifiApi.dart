@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:cloud_firestore/cloud_firestore.dart'; // Add Firestore import
 
 class FirebaseNotifiApi {
   final _firebaseMessaging = FirebaseMessaging.instance;
@@ -17,7 +18,25 @@ class FirebaseNotifiApi {
     await _firebaseMessaging.requestPermission();
     final fCMToken = await _firebaseMessaging.getToken();
     print('FCM Token: $fCMToken');
+
+    // Store FCM token in Firestore for the current user
+    await _storeFCMToken(fCMToken);
+
     await initPushNotifications();
+  }
+
+  // Store FCM token in Firestore
+  Future<void> _storeFCMToken(String? fCMToken) async {
+    try {
+      if (fCMToken != null) {
+        // Replace 'userId' with the current user's ID
+        await FirebaseFirestore.instance.collection('users').doc('userId').update({
+          'fcmToken': fCMToken,
+        });
+      }
+    } catch (e) {
+      print('Error storing FCM Token: $e');
+    }
   }
 
   Future<void> _initializeLocalNotifications() async {
@@ -60,12 +79,25 @@ class FirebaseNotifiApi {
   Future<void> initPushNotifications() async {
     FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
     FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
+
+    // Listen for foreground messages
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      _showNotification(message.notification?.title, message.notification?.body);
+    });
   }
 
   void handleMessage(RemoteMessage? message) {
     if (message != null) {
       navigatorKey.currentState?.pushNamed('/notifi', arguments: message);
     }
+  }
+
+  // Show notifications for foreground messages
+  Future<void> _showNotification(String? title, String? body) async {
+    const android = AndroidNotificationDetails('your_channel_id', 'your_channel_name',
+        channelDescription: 'your_channel_description');
+    const notificationDetails = NotificationDetails(android: android);
+    await _flutterLocalNotificationsPlugin.show(0, title, body, notificationDetails);
   }
 
   Future<void> _onSelectNotification(NotificationResponse notificationResponse) async {

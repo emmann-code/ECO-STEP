@@ -35,9 +35,12 @@ dependencies:
   smooth_page_indicator: ^1.2.0+3
   url_launcher: ^6.3.0
   flutter_polyline_points: ^2.1.0
-  flutter_barcode_scanner: ^2.0.0
   firebase_messaging: ^15.1.0
   flutter_local_notifications: ^17.2.2
+  responsive_framework: ^1.5.1
+  share: ^2.0.4
+  qr_code_scanner: ^1.0.1
+
 
 
 dev_dependencies:
@@ -45,29 +48,52 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^4.0.0
   intl_utils: ^2.8.7
+  flutter_launcher_icons: ^0.13.1
+
+
+
+flutter_icons:
+    android: "launcher_icon"
+    ios: true
+    image_path: "assets/recylce.png"  # Updated the correct path to your image
+    min_sdk_android: 21  # android min sdk min:16, default 21
+    web:
+      generate: true
+      image_path: "assets/recylce.png"  # Updated the correct path for the web
+      background_color: "#FFFFFF"  # Replace with your desired background color
+      theme_color: "#00FF00"       # Replace with your desired theme color
+    windows:
+      generate: true
+      image_path: "assets/recylce.png"  # Updated the correct path for Windows
+      icon_size: 48  # min:48, max:256, default: 48
+    macos:
+      generate: true
+      image_path: "assets/recylce.png"  # Updated the correct path for macOS
+
+
 
 # Flutter Intl configuration should be at the top level, not inside any dependencies block
-#flutter_intl:
-#  enabled: true
-#  arb_dir: lib/l10n
-#  template_arbs:
-#    - lib/generated/l10n/intl_en.arb
-#    - lib/generated/l10n/intl_af.arb
-#    - lib/generated/l10n/intl_ar.arb
-#    - lib/generated/l10n/intl_zh.arb
-#    - lib/generated/l10n/intl_nl.arb
-#    - lib/generated/l10n/intl_fr.arb
-#    - lib/generated/l10n/intl_de.arb
-#    - lib/generated/l10n/intl_el.arb
-#    - lib/generated/l10n/intl_he.arb
-#    - lib/generated/l10n/intl_pl.arb
-#  output_localization_file: lib/l10n/intl_messages.dart
-#  output_localization_file_header: lib/l10n/intl_messages_header.dart
-#  output_localization_file_header_path: lib/l10n/intl_messages_header.dart
+flutter_intl:
+  enabled: true
+  arb_dir: lib/l10n
+  template_arbs:
+    - lib/generated/l10n/intl_en.arb
+    - lib/generated/l10n/intl_af.arb
+    - lib/generated/l10n/intl_ar.arb
+    - lib/generated/l10n/intl_zh.arb
+    - lib/generated/l10n/intl_nl.arb
+    - lib/generated/l10n/intl_fr.arb
+    - lib/generated/l10n/intl_de.arb
+    - lib/generated/l10n/intl_el.arb
+    - lib/generated/l10n/intl_he.arb
+    - lib/generated/l10n/intl_pl.arb
+  output_localization_file: lib/l10n/intl_messages.dart
+  output_localization_file_header: lib/l10n/intl_messages_header.dart
+  output_localization_file_header_path: lib/l10n/intl_messages_header.dart
 
 flutter:
   uses-material-design: true
 
   assets:
     - assets/
-    - lib/generated/l10n/
+    - assets/Tire.jpeg
