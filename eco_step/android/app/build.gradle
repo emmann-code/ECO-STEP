@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.example.eco_step"
-    compileSdk = 35
+    compileSdk = 34
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

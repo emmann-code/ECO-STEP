@@ -4,7 +4,6 @@
     <content url="file://$MODULE_DIR$/../../eco_step" dumb="true">
       <excludeFolder url="file://$MODULE_DIR$/../../eco_step/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/../../eco_step/.pub" />
-      <excludeFolder url="file://$MODULE_DIR$/../../eco_step/build" />
     </content>
   </component>
 </module>
